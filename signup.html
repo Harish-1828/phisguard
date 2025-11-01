@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>Sign Up | PhishGuard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #f7f9fc;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      color: #2d3748;
+    }
+    .signup-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      width: 360px;
+      max-width: 90vw;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .signup-container h2 {
+      margin-bottom: 0.5rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a202c;
+    }
+    .signup-container p.subtitle {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #718096;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    input:focus {
+      outline: none;
+      border-color: #4c6ef5;
+      box-shadow: 0 0 0 3px rgba(76,110,245,0.12);
+    }
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background: #4c6ef5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #3b5bdb;
+    }
+    .login-link {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .login-link a {
+      color: #4c6ef5;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+    .back-home {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 0.9rem;
+      text-decoration: none;
+      color: #4c6ef5;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #4a5568;
+    }
+    .spinner {
+      border: 2px solid #edf2f7;
+      border-top: 2px solid #4c6ef5;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 0.5rem auto;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .password-strength {
+      font-size: 0.85rem;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+    }
+    .strength-weak {
+      background: #ffe5e5;
+      color: #c53030;
+    }
+    .strength-medium {
+      background: #fff7e5;
+      color: #b7791f;
+    }
+    .strength-strong {
+      background: #e6fffa;
+      color: #2f855a;
+    }
+  </style>
+</head>
+<body>
+  <a href="/homepage" class="back-home">← Back</a>
+  
+  <form class="signup-container" id="signupForm">
+    <h2>Create your account</h2>
+    <p class="subtitle">It only takes a minute to get started</p>
+
+    <label for="email">Email address</label>
+    <input type="email" id="email" name="email" required="" placeholder="you@example.com">
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required="" placeholder="At least 8 characters">
+    <div id="passwordStrength" class="password-strength" style="display: none;"></div>
+
+    <label for="confirm-password">Confirm password</label>
+    <input type="password" id="confirm-password" name="confirm-password" required="" placeholder="Re-enter password">
+
+    <button type="submit">Sign up</button>
+    
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Setting up your account…</p>
+    </div>
+    
+    <div class="login-link">
+      Already have an account? <a href="/login">Log in</a>
+    </div>
+  </form>
+
+<script>
+document.getElementById('password').addEventListener('input', function() {
+  const password = this.value;
+  const strengthDiv = document.getElementById('passwordStrength');
+  
+  if (password.length === 0) {
+    strengthDiv.style.display = 'none';
+    return;
+  }
+
+  strengthDiv.style.display = 'block';
+  let strength = 0;
+  if (password.length >= 8) strength++;
+  if (/[A-Z]/.test(password)) strength++;
+  if (/[a-z]/.test(password)) strength++;
+  if (/[0-9]/.test(password)) strength++;
+  if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+  strengthDiv.className = 'password-strength';
+  
+  if (strength < 3) {
+    strengthDiv.classList.add('strength-weak');
+    strengthDiv.textContent = 'Weak — try mixing upper/lowercase, numbers, or symbols';
+  } else if (strength < 4) {
+    strengthDiv.classList.add('strength-medium');
+    strengthDiv.textContent = 'Medium — stronger than most, but could be better';
+  } else {
+    strengthDiv.classList.add('strength-strong');
+    strengthDiv.textContent = 'Strong password';
+  }
+});
+
+document.getElementById('signupForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirm-password').value;
+  const loadingDiv = document.getElementById('loading');
+  const submitButton = this.querySelector('button[type="submit"]');
+
+  if (password !== confirmPassword) {
+    alert("Passwords don't match. Please try again.");
+    return;
+  }
+
+  submitButton.style.display = 'none';
+  loadingDiv.style.display = 'block';
+
+  // FIXED: Use relative URL instead of localhost
+  fetch('/api/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, name: email.split('@')[0] })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.message === "Signup success") {
+      alert('Account created successfully! Redirecting to login...');
+      window.location.href = '/login';
+    } else {
+      alert(data.message || 'Signup failed');
+      submitButton.style.display = 'block';
+      loadingDiv.style.display = 'none';
+    }
+  })
+  .catch(err => {
+    alert("Something went wrong: " + err.message);
+    submitButton.style.display = 'block';
+    loadingDiv.style.display = 'none';
+  });
+});
+</script>
+
+
+</body></html>
