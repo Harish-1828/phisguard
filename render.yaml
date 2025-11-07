@@ -1,10 +1,10 @@
 ﻿services:
   - type: web
     name: phisguard
-    runtime: python
+    runtime: node
     plan: free
-    buildCommand: pip install -r requirements.txt && pip install supervisor && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs && npm install
-    startCommand: bash start-supervisor.sh
+    buildCommand: npm install && pip3 install -r requirements.txt
+    startCommand: npm start
     envVars:
       - key: MONGODB_URI
         sync: false
