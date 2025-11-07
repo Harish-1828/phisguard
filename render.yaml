@@ -1,0 +1,32 @@
+﻿services:
+  - type: web
+    name: phisguard
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && pip install supervisor && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs && npm install
+    startCommand: bash start-supervisor.sh
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGO_URI
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: MODEL_PATH
+        value: models/phishing_model_optimized.pkl
+      - key: FLASK_PORT
+        value: 7000
+      - key: NODE_PORT
+        value: 3000
+      - key: PORT
+        value: 3000
+      - key: FLASK_URL
+        value: http://localhost:7000
+      - key: NODE_ENV
+        value: production
+      - key: ALLOWED_ORIGINS
+        value: "*"
